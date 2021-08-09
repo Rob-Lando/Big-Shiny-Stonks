@@ -135,7 +135,7 @@ function(input,output){
         
         TS = CMPR()
         
-        dygraph(cumsum(TS), main = "Portfolio Aggregate Monthly Return") %>%
+        dygraph(cumsum(TS), main = "Portfolio Aggregate Return") %>%
             dyOptions(fillGraph = TRUE, fillAlpha = 0.25,strokeWidth = 3)%>%
             dyRangeSelector()
         
