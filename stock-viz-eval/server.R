@@ -164,4 +164,62 @@ function(input,output){
             
     })
     
+    output$capm <- renderTable({
+        
+        
+        portfolio_returns_monthly = PRM()
+        baseline_returns_monthly = BMR()
+        
+        RaRb_single_portfolio <- left_join(portfolio_returns_monthly, 
+                                           baseline_returns_monthly,
+                                           by = "date")
+        
+        RaRb_single_portfolio %>%
+            tq_performance(Ra = Ra,
+                           Rb = Rb,
+                           performance_fun = table.CAPM) -> CAPM_summary
+        
+        CAPM_summary
+        
+    })
+    
+    output$sharpe <- renderTable({
+        
+        portfolio_returns_monthly = PRM()
+        baseline_returns_monthly = BMR()
+        
+        RaRb_single_portfolio <- left_join(portfolio_returns_monthly, 
+                                           baseline_returns_monthly,
+                                           by = "date")
+        
+        RaRb_single_portfolio %>%
+            tq_performance(Ra = Ra,
+                           Rb = Rb,
+                           performance_fun = SharpeRatio) -> Sharpe_summary
+        Sharpe_summary
+        
+    })
+    
+    output$sharpes <- renderTable({
+        
+        
+        stock_returns_monthly = IAMR()
+        baseline_returns_monthly = BMR()
+        
+        RaRb_single_portfolio <- left_join(stock_returns_monthly, 
+                                           baseline_returns_monthly,
+                                           by = "date")
+        
+        stock_returns_monthly %>%
+            tq_performance(
+                Ra = Ra, 
+                Rb = NULL, 
+                performance_fun = SharpeRatio) -> individual_sharpes
+        
+        individual_sharpes
+    
+    })
+    
+    
+    
 } # end of function input output block
