@@ -18,23 +18,32 @@ function(input,output){
     }) # end of reactive function block
     
     
-    # series_3 <- reactive({
-    #     
-    #     s = data.frame(tq_get(input$symbol_3, get = "stock.prices"))
-    #     
-    # }) # end of reactive function block
-    # 
-    # series_4 <- reactive({
-    #     
-    #     s = data.frame(tq_get(input$symbol_4, get = "stock.prices"))
-    #     
-    # }) # end of reactive function block
-    # 
-    # series_5 <- reactive({
-    #     
-    #     s = data.frame(tq_get(input$symbol_5, get = "stock.prices"))
-    #     
-    # }) # end of reactive function block
+    
+    selected_assets <- reactive({
+        
+        T_ = c(input$t1,input$t2,input$t3,input$t4,input$t5,
+              input$t6,input$t7,input$t8,input$t9,input$t10)
+        W_ = c(input$w1,input$w2,input$w3,input$w4,input$w5,
+               input$w6,input$w7,input$w8,input$w9,input$w10)
+        
+    }) # end of reactive function block
+    
+    individual_monthly_returns <- reactive ({
+        
+        T_ %>%
+            tq_get(get  = "stock.prices",
+                   from = input$Start_Date,
+                   to   = input$End_Date) %>%
+            group_by(symbol) %>%
+            tq_transmute(select     = close, 
+                         mutate_fun = periodReturn, 
+                         period     = "monthly", 
+                         col_rename = "Ra") -> stock_returns_monthly
+        
+        return(stock_returns_monthly)
+    })
+    
+    
     
     
     output$Price_1 <- renderPlotly({
@@ -70,58 +79,5 @@ function(input,output){
         }) # end of output 2
     
     output$table <- renderDataTable(aggregate_exchanges)
-    
-    # output$Price_3 <- renderPlotly({
-    # 
-    #     nyse_stocks %>%
-    #         filter(symbol == input$symbol_3) %>%
-    #         select(company) -> title
-    # 
-    #     s3 = series_3()
-    #     plot_ly(x = s3$date, type="candlestick",
-    #             open = s3$open, close = s3$close,
-    #             high = s3$high, low = s3$low,
-    #             increasing = i, decreasing = d) %>%
-    #         layout(title = paste("(1D)   ",input$symbol_3,':',pull(title)))-> fig_3
-    # 
-    #     fig_3
-    # 
-    # }) # end of output 3
-    # 
-    # output$Price_4 <- renderPlotly({
-    # 
-    #     nyse_stocks %>%
-    #         filter(symbol == input$symbol_4) %>%
-    #         select(company) -> title
-    # 
-    #     s4 = series_4()
-    #     plot_ly(x = s4$date, type="candlestick",
-    #             open = s4$open, close = s4$close,
-    #             high = s4$high, low = s4$low,
-    #             increasing = i, decreasing = d) %>%
-    #         layout(title = paste("(1D)   ",input$symbol_4,':',pull(title)))-> fig_4
-    # 
-    #     fig_4
-    # 
-    # }) # end of output 4
-    # 
-    # output$Price_5 <- renderPlotly({
-    # 
-    #     nyse_stocks %>%
-    #         filter(symbol == input$symbol_5) %>%
-    #         select(company) -> title
-    # 
-    #     s5 = series_5()
-    #     plot_ly(x = s5$date, type="candlestick",
-    #             open = s5$open, close = s5$close,
-    #             high = s5$high, low = s5$low,
-    #             increasing = i, decreasing = d) %>%
-    #         layout(title = paste("(1D)   ",input$symbol_5,':',pull(title)))-> fig_5
-    # 
-    #     fig_5
-    # 
-    # }) # end of output 5
-    
-    
     
 } # end of function block

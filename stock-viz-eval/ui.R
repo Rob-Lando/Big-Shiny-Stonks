@@ -4,12 +4,14 @@ dashboardPage(
     
     dashboardSidebar(
         
-        sidebarUserPanel("Tabs"),
+        sidebarUserPanel("Tabs:"),
         
         sidebarMenu(
             
-            menuItem("Charts", tabName = "charts", icon = icon("line-chart")),
-            menuItem("Portfolio Performance", tabName = "Eval", icon = icon("map")),
+            menuItem("Daily Candlestick Charts", tabName = "Charts", icon = icon("line-chart")),
+            menuItem("Define Portfolio", tabName = "portfolio", icon = icon("map")),
+            menuItem("Performance Summary", tabName = "raps", icon = icon("map")),
+            menuItem("Monthly Return Visuals", tabName = "mrv", icon = icon("line-chart")),
             menuItem("Table of Ticker Symbols", tabName = "Tickers", icon = icon("database"))
             
         ), #end of sidebarMenu block
@@ -26,27 +28,44 @@ dashboardPage(
         textInput(inputId='start_2',label='Start Date 2: YYYY-MM-DD',
                   value = "2020-01-01")
         
-        # selectizeInput(inputId='symbol_3',label='Symbol 3',choices=tickers),
-        # selectizeInput(inputId='symbol_4',label='Symbol 4',choices=tickers),
-        # selectizeInput(inputId='symbol_5',label='Symbol 5',choices=tickers)
-        
     ), # end of dashboardSidebar block
     
     dashboardBody(
         
+        #fluidRow(textInput(inputId = "Ticker 1", value = 'asndvkjasndlkv'),
+        
         tabItems(
             
-            tabItem(tabName = 'charts',
+            tabItem(tabName = 'Charts',
                     fluidRow(plotlyOutput("Price_1")),
                     fluidRow(plotlyOutput("Price_2"))),
-            tabItem(tabName = 'Tickers', dataTableOutput('table'))
-                    #fluidRow(plotlyOutput("Price_3")),
-                    #fluidRow(plotlyOutput("Price_4")),
-                    #fluidRow(plotlyOutput("Price_5")))
             
-        #    tabItem(tabName = 'Eval',
-        #            fluidRow(plotOutput))
-                    
+            tabItem(tabName = 'Tickers', dataTableOutput('table')),
+            
+            tabItem(tabName = 'portfolio',
+                    fluidRow(column(2,textInput(inputId = 't1', label = 'Ticker 1', value = "")),
+                             column(2,textInput(inputId = 't2', label = 'Ticker 2', value = "")),
+                             column(2,textInput(inputId = 't3', label = 'Ticker 3', value = "")),
+                             column(2,textInput(inputId = 't4', label = 'Ticker 4', value = "")),
+                             column(2,textInput(inputId = 't5', label = 'Ticker 5', value = ""))),
+                    fluidRow(column(2,textInput(inputId = 'w1', label = 'Decimal Weight 1', value = 0.0)),
+                             column(2,textInput(inputId = 'w2', label = 'Decimal Weight 2', value = 0.0)),
+                             column(2,textInput(inputId = 'w3', label = 'Decimal Weight 3', value = 0.0)),
+                             column(2,textInput(inputId = 'w4', label = 'Decimal Weight 4', value = 0.0)),
+                             column(2,textInput(inputId = 'w5', label = 'Decimal Weight 5', value = 0.0))),
+                    fluidRow(column(2,textInput(inputId = 't6', label = 'Ticker 6', value = "")),
+                             column(2,textInput(inputId = 't7', label = 'Ticker 7', value = "")),
+                             column(2,textInput(inputId = 't8', label = 'Ticker 8', value = "")),
+                             column(2,textInput(inputId = 't9', label = 'Ticker 9', value = "")),
+                             column(2,textInput(inputId = 't10', label = 'Ticker 10', value = ""))),
+                    fluidRow(column(2,textInput(inputId = 'w6', label = 'Decimal Weight 6', value = 0.0)),
+                             column(2,textInput(inputId = 'w7', label = 'Decimal Weight 7', value = 0.0)),
+                             column(2,textInput(inputId = 'w8', label = 'Decimal Weight 8', value = 0.0)),
+                             column(2,textInput(inputId = 'w9', label = 'Decimal Weight 9', value = 0.0)),
+                             column(2,textInput(inputId = 'w10', label = 'Decimal Weight 10', value = 0.0))),
+                    fluidRow(column(2,textInput(inputId = 'Start_Date', label = 'Start_Date YYYY-MM-DD', value = "2020-01-01")),
+                             column(2,textInput(inputId = 'End_Date', label = 'End_Date YYYY-MM-DD', value = "2021-08-08"))))
+            
         ) # end of tabItems block
         
     ) #end of dashboardBody block
