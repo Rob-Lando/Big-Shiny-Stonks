@@ -1,13 +1,15 @@
 function(input,output){
     
+    
     series_1 <- reactive({
         
         s = data.frame(tq_get(input$symbol_1,
                               get = "stock.prices",
                               from = input$start_1))
         
-    }) # end of reactive function block
-    
+        return(s)
+        
+    }) # end of reactive function block #######################################
     
     series_2 <- reactive({
         
@@ -15,9 +17,9 @@ function(input,output){
                               get = "stock.prices",
                               from = input$start_2))
         
-    }) # end of reactive function block
-    
-    
+        return(s)
+        
+    }) # end of reactive function block #######################################
     
     selected_assets <- reactive({
         
@@ -26,11 +28,19 @@ function(input,output){
         W_ = c(input$w1,input$w2,input$w3,input$w4,input$w5,
                input$w6,input$w7,input$w8,input$w9,input$w10)
         
-    }) # end of reactive function block
-    
-    individual_monthly_returns <- reactive ({
+        ticks_weights = data.frame(bind_cols(T_,W_))
+        names(ticks_weights) <- c("ticker","weight")
         
-        T_ %>%
+        return(ticks_weights)
+        
+    }) # end of reactive function block #######################################
+    
+    IAMR <- reactive ({ #individual asset monthly returns
+        
+        
+        sa = selected_assets()
+        
+        sa$ticker %>%
             tq_get(get  = "stock.prices",
                    from = input$Start_Date,
                    to   = input$End_Date) %>%
@@ -41,10 +51,51 @@ function(input,output){
                          col_rename = "Ra") -> stock_returns_monthly
         
         return(stock_returns_monthly)
-    })
+        
+    }) # end of reactive function block #######################################
     
+
+    BMR <- reactive ({ #baseline monthly returns
+        
+        "^GSPC" %>% # Using S&P500 as baseline rate of return.
+            tq_get(get  = "stock.prices",
+                   from = input$Start_Date,
+                   to   = input$End_Date) %>%
+            group_by(symbol) %>%
+            tq_transmute(select     = close, 
+                         mutate_fun = periodReturn, 
+                         period     = "monthly", 
+                         col_rename = "Rb") -> baseline_returns_monthly
+        
+        return(baseline_returns_monthly)
+        
+    }) # end of reactive function block #######################################
     
+    PRM <- reactive({ #portfolio monthly returns
+        
+        sa = selected_assets()
+        wts <- sa$weight
+        srm = IAMR()
+
+        srm %>%
+            tq_portfolio(assets_col  = symbol, 
+                         returns_col = Ra, 
+                         weights     = wts, 
+                         col_rename  = "Ra") -> portfolio_returns_monthly
+        
+        return(portfolio_returns_monthly)
+        
+    }) # end of reactive function block #######################################
     
+    CMPR <- reactive({ # cumulative monthly portfolio returns time series
+        
+        prm = PRM()
+        
+        TS = xts(prm$Ra,order.by=as.Date(prm$date))
+        
+        return(TS)
+        
+    }) # end of reactive function block #######################################
     
     output$Price_1 <- renderPlotly({
         
@@ -60,7 +111,7 @@ function(input,output){
         
         fig_1 
         
-        })# end of output 1
+        }) # end of output 1
 
     output$Price_2 <- renderPlotly({
         
@@ -78,6 +129,16 @@ function(input,output){
         
         }) # end of output 2
     
-    output$table <- renderDataTable(aggregate_exchanges)
+    output$table <- renderDataTable(aggregate_exchanges) #end of table output
     
-} # end of function block
+    output$cumulative_portfolio_returns <- renderDygraph({
+        
+        TS = CMPR()
+        
+        dygraph(cumsum(TS), main = "Portfolio Monthly Return") %>%
+            dyOptions(fillGraph = TRUE, fillAlpha = 0.25,strokeWidth = 3)%>%
+            dyRangeSelector()
+        
+    }) # end of cumulative portfolio returns output
+    
+} # end of function input output block

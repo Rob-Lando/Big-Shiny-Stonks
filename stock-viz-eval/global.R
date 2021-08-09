@@ -7,6 +7,7 @@ library(shinydashboard)
 library(tidyverse)
 library(plotly)
 library(data.table)
+library(dygraphs)
 
 #nyse_stocks = data.frame(tq_exchange("NYSE"))
 #amex_stocks = data.frame(tq_exchange("AMEX"))
