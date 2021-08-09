@@ -135,10 +135,22 @@ function(input,output){
         
         TS = CMPR()
         
-        dygraph(cumsum(TS), main = "Portfolio Monthly Return") %>%
+        dygraph(cumsum(TS), main = "Portfolio Aggregate Monthly Return") %>%
             dyOptions(fillGraph = TRUE, fillAlpha = 0.25,strokeWidth = 3)%>%
             dyRangeSelector()
         
     }) # end of cumulative portfolio returns output
+    
+    output$monthly_portfolio_returns <- renderDygraph({
+
+        prm = PRM()
+
+        TS = xts(prm$Ra,order.by=as.Date(prm$date))
+
+        dygraph(TS, main = "Portfolio Monthly Returns") %>%
+            dyOptions(strokeWidth = 2, colors = "Red") %>%
+            dyRangeSelector()
+
+    })
     
 } # end of function input output block

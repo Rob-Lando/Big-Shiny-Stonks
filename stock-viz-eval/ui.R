@@ -63,10 +63,13 @@ dashboardPage(
                              column(2,textInput(inputId = 'w8', label = 'Decimal Weight 8', value = 0.1)),
                              column(2,textInput(inputId = 'w9', label = 'Decimal Weight 9', value = 0.1)),
                              column(2,textInput(inputId = 'w10', label = 'Decimal Weight 10', value = 0.1))),
-                    fluidRow(column(2,textInput(inputId = 'Start_Date', label = 'Start_Date YYYY-MM-DD', value = "2020-01-01")),
+                    fluidRow(column(2,textInput(inputId = 'Start_Date', label = 'Start_Date YYYY-MM-DD', value = "2000-01-01")),
                              column(2,textInput(inputId = 'End_Date', label = 'End_Date YYYY-MM-DD', value = "2021-08-08")))),
             
-            tabItem(tabName = 'mrv',fluidRow(dygraphOutput("cumulative_portfolio_returns")))
+            tabItem(tabName = 'mrv',
+                    fluidRow(dygraphOutput("cumulative_portfolio_returns")),
+                    fluidRow(dygraphOutput("monthly_portfolio_returns")))
+            
             
         ) # end of tabItems block
         
