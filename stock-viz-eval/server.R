@@ -153,4 +153,15 @@ function(input,output){
 
     })
     
+    output$asset_boxplots <- renderPlot({
+        
+        iamr = IAMR()
+        
+        g <- ggplot(iamr)
+        g + geom_boxplot(aes(x = symbol,y = Ra, fill = symbol),
+                         color = "black", size = 0.5) +
+            ggtitle("Individual Asset Boxplots")+ ylab("Monthly Returns")+ylim(-0.75,1)
+            
+    })
+    
 } # end of function input output block

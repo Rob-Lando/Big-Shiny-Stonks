@@ -68,7 +68,8 @@ dashboardPage(
             
             tabItem(tabName = 'mrv',
                     fluidRow(dygraphOutput("cumulative_portfolio_returns")),
-                    fluidRow(dygraphOutput("monthly_portfolio_returns")))
+                    fluidRow(dygraphOutput("monthly_portfolio_returns")),
+                    fluidRow(plotOutput("asset_boxplots")))
             
             
         ) # end of tabItems block
